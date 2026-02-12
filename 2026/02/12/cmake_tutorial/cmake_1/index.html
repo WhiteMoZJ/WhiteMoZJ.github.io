@@ -198,7 +198,7 @@
 <li><code>cmake_minimum_required(VERSION &lt;cmake_version&gt;)</code> 用于规定 CMake 所需的最低版本, <code>VERSION</code> 是 CMake 内置的变量</li>
 <li><code>project(&lt;project_name&gt;)</code> 为项目规定名称，它也包含以下几个可选参数<ul>
 <li><code>VERSION &lt;version&gt;</code>：为项目规定版本</li>
-<li><code>LANGUAGES &lt;language&gt;</code>: \<language\> 可以是 <code>C</code>、<code>CXX</code>(C++)、<code>JAVA</code>、<code>CUDA</code>… 但需参考具体版本来查看对不同语言的支持</li>
+<li><code>LANGUAGES &lt;language&gt;</code>: 可以是 <code>C</code>、<code>CXX</code>(C++)、<code>JAVA</code>、<code>CUDA</code>… 但需参考具体版本来查看对不同语言的支持</li>
 </ul>
 </li>
 </ul>
@@ -213,7 +213,8 @@
 </blockquote>
 <p>如果没有引用其他库的话现在可以执行脚本了</p>
 <blockquote>
-<p>当使用 Windows + 非MCVS 作为构建工具的时候，往往会导致执行部分函数(例如<code>std::cout</code>)时发生溢出错误，这是由于可能存在多个相同的链接库而产生链接错误导致的\<br>在 <code>CMakelists.txt</code> 中 <code>add_executable</code> 前添加：<br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_EXE_LINKER_FLAGS <span class="string">&quot;-static&quot;</span>)</span><br></pre></td></tr></table></figure></p>
+<p>当使用 Windows + 非 MSVC 作为构建工具的时候，往往会导致执行部分函数(例如<code>std::cout</code>)时发生溢出错误，这是由于可能存在多个相同的链接库而产生链接错误导致的</p>
+<p>在 <code>CMakelists.txt</code> 中 <code>add_executable</code> 前添加：<br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_EXE_LINKER_FLAGS <span class="string">&quot;-static&quot;</span>)</span><br></pre></td></tr></table></figure></p>
 <p>能够解决此问题</p>
 </blockquote>
 <h1 id="执行脚本"><a href="#执行脚本" class="headerlink" title="执行脚本"></a>执行脚本</h1><p>使用指令<br><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake .</span><br></pre></td></tr></table></figure></p>
