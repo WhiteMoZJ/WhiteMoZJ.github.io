@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>机器学习101——02偏差-方差权衡与正则化</title>
+      <link href="/2026/04/01/ml101/02_regularization/"/>
+      <url>/2026/04/01/ml101/02_regularization/</url>
+      
+        <content type="html"><![CDATA[<h1 id="偏差与方差"><a href="#偏差与方差" class="headerlink" title="偏差与方差"></a>偏差与方差</h1><p><strong>偏差</strong>与<strong>方差</strong>是机器学习中拆解模型误差、诊断欠拟合/过拟合、优化泛化能力的核心工具</p><h2 id="偏差-方差分解"><a href="#偏差-方差分解" class="headerlink" title="偏差-方差分解"></a>偏差-方差分解</h2><p>以回归问题为例：</p><p>对于测试样本 $x$，$y_D$ 为 $x$ 在<strong>数据集中的标记</strong>，$y$ 是 $x$ 的<strong>真实标记</strong></p><blockquote><p>可以理解为 $y_D$ 是带有噪声的 $y$</p></blockquote><p>$f(x;D)$ 为训练集上学得的模型 $f$ 在 $x$ 上的预测输出，预测期望为</p><script type="math/tex; mode=display">\bar{f}(x)=E(f(x;D))</script><p><strong>方差</strong>（<em>高方差 = 过拟合</em>）为</p><script type="math/tex; mode=display">var(x)=E\left[\left(f(x;D)-\bar{f}(x)\right)^2\right]</script><p><strong>噪声</strong>为</p><script type="math/tex; mode=display">\epsilon^2=E\left[(y_D-y)^2\right]</script><p>期望输出与真实标记的<strong>偏差</strong>（<em>高偏差 = 欠拟合</em>）：</p><script type="math/tex; mode=display">bias^2(x)=\left(\bar{f}(x)-y\right)^2</script><p>假定<strong>噪声的期望为零</strong>，$E(y_D-y)=0$，对期望<strong>泛化误差</strong>进行分解$^{[1]}$：</p><script type="math/tex; mode=display">\begin{align*}E(f;D)&=E\left[\left(f(x;D)-y_D\right)^2\right] \\&=E\left[\left(f(x;D)-\bar{f}(x)+\bar{f}(x)-y_D\right)^2\right] \\&=E\left[\left(f(x;D)-\bar{f}(x)\right)^2\right]+E\left[\left(f(x;D)-y_D\right)^2\right]+E\left[2\left(f(x;D)-\bar{f}(x)\right)\left(f(x;D)-y_D\right)\right] \\&=E\left[\left(f(x;D)-\bar{f}(x)\right)^2\right]+E\left[\left(\bar{f}(x)-y_D\right)^2\right] \\&=E\left[\left(f(x;D)-\bar{f}(x)\right)^2\right]+E\left[\left(\bar{f}(x)-y+y-y_D\right)^2\right] \\&=E\left[\left(f(x;D)-\bar{f}(x)\right)^2\right]+E\left[\left(\bar{f}(x)-y\right)^2\right]+E\left[\left(y-y_D\right)^2\right]+E\left[2\left(\bar{f}(x)-y\right)\left(y-y_D\right)\right] \\&=E\left[\left(f(x;D)-\bar{f}(x)\right)^2\right]+E\left[\left(\bar{f}(x)-y\right)^2\right]+E\left[\left(y-y_D\right)^2\right] \\&=bias^2(x)+var(x)+\epsilon^2\end{align*}</script><h2 id="偏差-方差权衡"><a href="#偏差-方差权衡" class="headerlink" title="偏差-方差权衡"></a>偏差-方差权衡</h2><p>泛化误差可分解为<strong>偏差、方差与噪声之和</strong></p><p>这是机器学习的核心底层规律：<strong>在固定数据量、固定计算资源的前提下，偏差和方差天然存在此消彼长的权衡关系</strong></p><p>核心变化规律（随模型复杂度提升）</p><ol><li><strong>低复杂度模型（如线性模型、小参数量模型）</strong>：偏差极高，方差极低，通常表现为欠拟合</li><li><strong>中等复杂度模型（最优平衡点）</strong>：偏差和方差都处于较低水平</li><li><strong>高复杂度模型（如高次多项式）</strong>：偏差极低，方差极高，通常表现为过拟合</li></ol><h1 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h1><p>正则化的核心目标是<strong>抑制模型过拟合</strong>，通过给模型学习过程添加约束，<strong>降低模型复杂度</strong>，避免模型记住训练数据的噪声，从而<strong>提升在未知数据上的泛化能力</strong></p><h2 id="L1正则化"><a href="#L1正则化" class="headerlink" title="L1正则化"></a>L1正则化</h2><p>L1正则化通过在损失函数中加入模型权重参数的绝对值之和作为惩罚项</p><script type="math/tex; mode=display">L'=L+\lambda\sum^n_{i=1}\vert{w_i}\vert</script><ul><li>$L$：模型原始损失函数（如交叉熵、均方误差）</li><li>$λ$：正则化强度系数，λ≥0，值越大惩罚越强</li><li>$w_i$：模型权重参数（通常不对偏置项施加正则化）</li></ul><p>L1会<strong>将不重要特征的权重直接压缩至 0</strong>，实现自动特征选择，让模型权重矩阵变得稀疏，大幅提升模型可解释性</p><h2 id="L2正则化"><a href="#L2正则化" class="headerlink" title="L2正则化"></a>L2正则化</h2><p>L2正则化通过在损失函数中加入模型权重参数的平方和作为惩罚项，约束权重的幅值</p><script type="math/tex; mode=display">L'=L+\frac{\lambda}{2}\sum^n_{i=1}w_i^2</script><p>L2 会<strong>让所有权重都趋近于 0，但不会等于 0</strong>，让权重值更均匀、更小，避免少数权重主导模型输出，降低模型对个别噪声特征的依赖</p><h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>设置一个多项式：</p><script type="math/tex; mode=display">y=4+3x-2x^2+\log(x+2.7)x^3</script><p>生成随机 $5$ 组 $100$ 个 $x$ 值——标准正态分布，得出对应的 $y$ 并加上噪声，并将其中的 $70%$ 个作为训练集，$30%$ 个作为测试集</p><p>由于实际上我们不知道数据的基本模型，考虑使用多项式作为回归函数：</p><script type="math/tex; mode=display">y=w_1x+w_2x^2+w_3x^3+b</script><p>分别不使用正则化、使用L1、L2正则化进行拟合，得出泛化误差（实际上是 $5$ 组测试集的MSE之和）：</p><div class="table-container"><table><thead><tr><th>正则化</th><th>泛化误差</th></tr></thead><tbody><tr><td>无</td><td>36.50</td></tr><tr><td>L1</td><td>36.26</td></tr><tr><td>L2</td><td>37.28</td></tr></tbody></table></div><p>由于使用的问题较为简单，并不能体现出正则化的特性，之后对于深度神经网络会进行进一步对比</p><h1 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h1><p>Dropout 是<strong>深度学习专属</strong>的随机正则化方法，核心是<strong>训练过程中按预设概率随机临时丢弃部分神经元</strong>，推理阶段恢复完整网络，通过引入随机性打破神经元的共适应关系</p><p>采用<strong>反向随机失活</strong>实现，保证训练和推理的输出期望一致，无需额外修改推理逻辑</p><div class="table-container"><table><thead><tr><th>阶段</th><th>核心行为</th><th>数学实现</th></tr></thead><tbody><tr><td><strong>训练阶段</strong></td><td>以保留概率 $p$ 随机保留神经元，$1−p$ 的概率将神经元输出置 $0$；保留的神经元输出乘以 $\frac{1}{p}$ ​做缩放，保证输出期望不变</td><td>$a_{drop}​=\frac{a\odot{mark}}{p}$​，其中 $mask$ 服从伯努利分布 $Bernoulli(p)$</td></tr><tr><td><strong>推理阶段</strong></td><td>完全关闭 Dropout，所有神经元完整参与计算，不做任何缩放，保证输出确定性</td><td>$a_{out}=a$</td></tr></tbody></table></div><p><strong>核心原理与特性</strong>:</p><ul><li><strong>打破神经元共适应</strong>：避免神经元过度依赖特定的其他神经元，强制网络学习更鲁棒、更通用的特征，而非记住训练数据</li><li><strong>集成学习等效性</strong>：每次训练迭代都会生成一个不同的 “子网络”，整个训练过程相当于训练了海量不同结构的子网络，推理时对所有子网络做概率集成，大幅提升泛化能力</li><li><strong>超参数特性</strong>：核心超参数是丢弃率（1−p），常用范围：输入层 $0.1-0.2$，全连接隐藏层 $0.3-0.5$，Transformer 注意力层 $0.1-0.2$；丢弃率过高会导致模型欠拟合，过低则正则化效果不足</li><li><strong>变种扩展</strong>：适配不同网络结构的变种包括 Spatial Dropout（CNN）、DropBlock（目标检测）、MC Dropout（不确定性估计）等</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 机器学习101 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习 </tag>
+            
+            <tag> 正则化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>机器学习101——01线性代数补充</title>
       <link href="/2026/04/01/ml101/01_linear_algebra_add/"/>
       <url>/2026/04/01/ml101/01_linear_algebra_add/</url>
